@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Payment Successful</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    :root{
+      --bg:#0b0c10; --card:#111218; --text:#e8e8ea; --muted:#a8abb3; --ok:#22c55e; --ok-strong:#16a34a; --ring:#2a2f3a;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f7fb; --card:#ffffff; --text:#0f1222; --muted:#6b7280; --ok:#16a34a; --ok-strong:#15803d; --ring:#e5e7eb; }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:radial-gradient(1200px 600px at 50% -200px, rgba(34,197,94,.10), transparent 60%), var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text); line-height:1.45; display:grid; min-height:100dvh; place-items:center; padding:24px;
+    }
+    .card{
+      width:min(680px, 100%); background:var(--card); border:1px solid var(--ring);
+      border-radius:18px; padding:28px; box-shadow:0 10px 30px rgba(0,0,0,.20);
+    }
+    .header{display:flex; gap:16px; align-items:center; margin-bottom:10px}
+    .badge{
+      display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px;
+      background:rgba(34,197,94,.12); color:var(--ok-strong); font-weight:600; font-size:14px; border:1px solid rgba(34,197,94,.35)
+    }
+    .title{font-size:28px; font-weight:800; margin:.2rem 0}
+    .sub{color:var(--muted); font-size:15px; margin:0}
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0 8px}
+    .row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border:1px dashed var(--ring); border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,.02), transparent)}
+    .label{color:var(--muted); font-size:13px}
+    .value{font-weight:700}
+    .actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+    button, .link{
+      cursor:pointer; border:1px solid var(--ring); background:#1a1c24; color:var(--text);
+      padding:12px 16px; border-radius:12px; font-weight:600; font-size:14px
+    }
+    .primary{background:var(--ok); border-color:transparent; color:#fff}
+    .primary:hover{background:var(--ok-strong)}
+    .muted{background:transparent}
+    .footer{margin-top:14px; color:var(--muted); font-size:12px}
+    .check{
+      width:44px; height:44px; display:grid; place-items:center; border-radius:999px; background:var(--ok);
+      color:white; box-shadow:0 8px 20px rgba(22,163,74,.45); position:relative; isolation:isolate;
+      animation:pop .5s ease-out both
+    }
+    @keyframes pop{0%{transform:scale(.6); opacity:0} 60%{transform:scale(1.08)} 100%{transform:scale(1); opacity:1}}
+    /* confetti (minimal) */
+    .confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden}
+    .confetti i{
+      position:absolute; top:-10vh; width:6px; height:14px; background:currentColor; opacity:.9; border-radius:2px;
+      animation:fall linear forwards; transform:rotate(15deg)
+    }
+    @keyframes fall {
+      to { transform:translateY(120vh) rotate(360deg) }
+    }
+    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div aria-hidden="true" class="confetti" id="confetti"></div>
+
+  <main class="card" role="main" aria-label="Payment success receipt">
+    <div class="header">
+      <div class="check" aria-hidden="true">
+        <!-- check icon -->
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20 7L9 18l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="badge" aria-live="polite">Payment Successful</div>
+        <h1 class="title">Thank you—your payment is complete.</h1>
+        <p class="sub">We’ve sent a receipt to <span id="emailValue">your email</span>.</p>
+      </div>
+    </div>
+
+    <section class="grid" aria-labelledby="summaryTitle">
+      <div class="row">
+        <div>
+          <div class="label">Amount</div>
+          <div class="value" id="amountValue">₹ 0.00</div>
+        </div>
+        <div>
+          <div class="label">Status</div>
+          <div class="value" style="color:var(--ok-strong)">Succeeded</div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="label">Order ID</div>
+          <div class="value" id="orderIdValue">—</div>
+        </div>
+        <div>
+          <div class="label">Date & Time</div>
+          <div class="value" id="dateValue">—</div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="label">Payment Method</div>
+          <div class="value" id="methodValue">Card</div>
+        </div>
+        <div>
+          <div class="label">Txn Ref</div>
+          <div class="value" id="txnValue">—</div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="label">Billing Name</div>
+          <div class="value" id="nameValue">—</div>
+        </div>
+        <div>
+          <div class="label">Email</div>
+          <div class="value" id="emailValue2">—</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button class="primary" onclick="window.print()">Print / Save Receipt</button>
+      <a class="link muted" id="continueLink" href="/">Continue</a>
+    </div>
+
+    <p class="footer">Need help? Contact support with your Order ID for faster resolution.</p>
+  </main>
+
+  <script>
+    // Read query params and hydrate the UI
+    const q = new URLSearchParams(location.search);
+    const get = (k, d="") => (q.get(k) ?? d).trim();
+
+    const amount = get("amount", "0.00");
+    const currency = get("currency", "INR").toUpperCase();
+    const orderId = get("orderId", "—");
+    const email = get("email", "your@email.com");
+    const name = get("name", "—");
+    const method = get("method", "Card");
+    const txn = get("txn", "—");
+    const next = get("next", "/");
+
+    document.getElementById("amountValue").textContent =
+      (currency === "INR" ? "₹ " : currency + " ") + amount;
+
+    document.getElementById("orderIdValue").textContent = orderId;
+    document.getElementById("emailValue").textContent = email;
+    document.getElementById("emailValue2").textContent = email;
+    document.getElementById("nameValue").textContent = name;
+    document.getElementById("methodValue").textContent = method;
+    document.getElementById("txnValue").textContent = txn;
+    document.getElementById("dateValue").textContent =
+      new Date().toLocaleString(undefined, { dateStyle:"medium", timeStyle:"short" });
+
+    const link = document.getElementById("continueLink");
+    link.href = next || "/";
+
+    // Minimal confetti
+    const colors = ["#22c55e","#86efac","#4ade80","#16a34a","#bbf7d0"];
+    const confetti = document.getElementById("confetti");
+    for (let i=0;i<60;i++){
+     const p = document.createElement("i");
+      p.style.left = Math.random()*100 + "vw";
+      p.style.color = colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDuration = 2.2 + Math.random()*1.8 + "s";
+      p.style.animationDelay = Math.random()*0.8 + "s";
+      p.style.opacity = 0.6 + Math.random()*0.4;
+      confetti.appendChild(p);
+    }
+    // Reduce motion: remove confetti if user prefers
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      confetti.innerHTML = "";
+    }
+  </script>
+</body>
+</html>
