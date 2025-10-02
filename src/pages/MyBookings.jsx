@@ -42,19 +42,20 @@ const MyBookings = () => {
       const options = {
         key: key, // Replace with your Razorpay key_id
         amount: '50000', // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        amount_due: 1000,
         currency: 'INR',
         name: 'Hema',
         description: 'Test Transaction',
-        order_id: 'order_IluGWxBm9U8zJ8', // This is the order_id created in the backend
-        callback_url: 'http://localhost:3000/payment-success', // Your success URL
-        prefill: {
-          name: 'Gaurav Kumar',
-          email: 'gaurav.kumar@example.com',
-          contact: '9999999999'
-        },
-        theme: {
-          color: '#F37254'
-        },
+        id: 'order_IluGWxBm9U8zJ8', // This is the order_id created in the backend
+        // callback_url: 'http://localhost:3000/payment-success', // Your success URL
+        // prefill: {
+        //   name: 'Gaurav Kumar',
+        //   email: 'gaurav.kumar@example.com',
+        //   contact: '9999999999'
+        // },
+        // theme: {
+        //   color: '#F37254'
+        // },
       };
 
       const rzp = new Razorpay(options);
